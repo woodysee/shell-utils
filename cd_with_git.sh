@@ -4,7 +4,6 @@
 # How to use:
 # - Copy this function into your `~/.bashrc` or `~/.bash_profile`
 # TODO: 
-# - Not to add same token
 # - Prevent asking of password 
 cd() {
   builtin cd "$@";
@@ -20,9 +19,12 @@ cd() {
 
   if [[ "$is_git_repo" == true ]]; then
 
+    local ssh_add_main_cnt="$(ssh-add -l | grep 'main_token@gmail.com' | wc -l)"
+    local ssh_add_other_cnt="$(ssh-add -l | grep 'other_token@gmail.com' | wc -l)"
+
     local part_of_main_token_area_regex=^\/home\/.+\/main_folder
     local part_of_other_token_area_regex=^\/home\/.+\/other_folder
-    if [[ "$(pwd)" =~ $part_of_wsk_token_area_regex ]] ; then
+    if [[ "$(pwd)" =~ $part_of_main_token_area_regex && $ssh_add_main_cnt > 0 ]] ; then
       echo "Using main git credentials."
       git config user.name "main"
       git config user.email "main_token@gmail.com"
@@ -30,7 +32,7 @@ cd() {
     fi
 
 
-    if [[ "$(pwd)" =~ $part_of_other_token_area_regex ]] ; then
+    if [[ "$(pwd)" =~ $part_of_other_token_area_regex && $ssh_add_other_cnt > 0 ]] ; then
       echo "Using other git credentials."
       git config user.name "other"
       git config user.email "other_token@gmail.com"
