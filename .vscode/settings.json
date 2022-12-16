@@ -1,5 +1,6 @@
 {
   "files.associations": {
+    ".bats": "bats",
     ".envrc": "shellscript",
     ".envrc.example": "shellscript",
     ".sh": "shellscript"
